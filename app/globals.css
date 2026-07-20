@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-ui-text font-body antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display font-semibold tracking-tight;
+  line-height: 1.15;
+}
+
+/* Dotted background used behind the hero */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 70%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 70%);
+}
+
+/* Native details/summary arrow, hidden so we can draw our own +/- */
+details.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+details.faq-item summary::after {
+  content: "+";
+  font-size: 22px;
+  font-weight: 400;
+  color: #b88f0a;
+}
+details.faq-item[open] summary::after {
+  content: "\2013";
+}
