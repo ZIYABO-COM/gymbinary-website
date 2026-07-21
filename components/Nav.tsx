@@ -19,10 +19,21 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-50 bg-ink/85 backdrop-blur-md border-b border-charcoal-border">
       <div className="max-w-content mx-auto px-6 py-3.5 flex items-center justify-between gap-6">
-        <Link href="#" className="flex items-center gap-2.5">
-          <Image src="/assets/gym-binary-logo.png" alt="Gym Binary logo" width={38} height={38} className="rounded-lg" />
-          <span className="font-display font-bold text-white text-lg tracking-tight">
-            Gym Binary
+        <Link href="#" className="flex items-center gap-3">
+          <Image
+            src="/assets/gym-binary-logo.png"
+            alt="Gym Binary logo"
+            width={72}
+            height={72}
+            className="shrink-0"
+          />
+          <span className="flex flex-col leading-tight">
+            <span className="font-display font-bold text-accent text-xl tracking-tight">
+              Gym Binary
+            </span>
+            <span className="text-[10.5px] font-semibold text-white uppercase tracking-widest">
+              Smarter Gym. Stronger You.
+            </span>
           </span>
         </Link>
 

@@ -42,13 +42,24 @@ export default function Footer() {
       <div className="max-w-content mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr] gap-8 mb-12">
           <div>
-            <Link href="#" className="flex items-center gap-2.5 mb-3.5">
-              <Image src="/assets/gym-binary-logo.png" alt="Gym Binary logo" width={38} height={38} className="rounded-lg" />
-              <span className="font-display font-bold text-white text-lg">Gym Binary</span>
+            <Link href="#" className="flex items-center gap-3 mb-3.5">
+              <Image
+                src="/assets/gym-binary-logo.png"
+                alt="Gym Binary logo"
+                width={64}
+                height={64}
+                className="shrink-0"
+              />
+              <span className="flex flex-col leading-tight">
+                <span className="font-display font-bold text-accent text-lg">Gym Binary</span>
+                <span className="text-[10px] font-semibold text-white uppercase tracking-widest">
+                  Smarter Gym. Stronger You.
+                </span>
+              </span>
             </Link>
             <p className="text-[13.5px] text-ui-muted-soft max-w-[260px]">
-              Smarter gym. Stronger you. Multi-branch gym management software
-              for growing fitness businesses.
+              Multi-branch gym management software for growing fitness
+              businesses.
             </p>
           </div>
           {columns.map((col) => (
