@@ -1,6 +1,10 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+
+if (process.env.RESEND_API_KEY) {
+  resend = new Resend(process.env.RESEND_API_KEY);
+}
 
 interface DemoRequestBody {
   intent: "demo" | "trial";
@@ -35,6 +39,15 @@ export async function POST(req: Request) {
     message,
   } = body;
 
+if (!resend) {
+    return Response.json(
+      { error: "Email service is not configured." },
+      { status: 500 }
+    );
+  }
+
+
+
   if (!name || !email || !phone) {
     return Response.json(
       { error: "Name, email, and phone are required." },
@@ -59,7 +72,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: process.env.DEMO_FROM_EMAIL || "Gym Binary <onboarding@resend.dev>",
       to: process.env.DEMO_NOTIFY_EMAIL,
-      replyTo: email,
+      reply_to: email,
       subject: `New ${label.toLowerCase()} — ${gymName || name}`,
       text: [
         `Type: ${label}`,
