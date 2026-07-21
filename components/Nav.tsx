@@ -13,6 +13,8 @@ const links = [
   { href: "#faq", label: "FAQ" },
 ];
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.gymbinary.com";
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
 
@@ -50,7 +52,7 @@ export default function Nav() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <a href="#" className="text-gray-300 hover:text-white text-[14.5px] font-medium px-1.5 py-2.5">
+          <a href={`${APP_URL}/login`} className="text-gray-300 hover:text-white text-[14.5px] font-medium px-1.5 py-2.5">
             Log In
           </a>
           <a
@@ -108,6 +110,13 @@ export default function Nav() {
                 </a>
               ))}
               <div className="flex flex-col gap-3 pt-2">
+                <a
+                  href={`${APP_URL}/login`}
+                  onClick={() => setOpen(false)}
+                  className="text-gray-300 hover:text-white text-[15px] font-medium"
+                >
+                  Log In
+                </a>
                 <a
                   href="#demo"
                   onClick={() => setOpen(false)}
