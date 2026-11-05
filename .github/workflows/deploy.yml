@@ -20,8 +20,9 @@ jobs:
             set -eu
             cd /home/opc/GymBrain/gymbinary-website
 
-            echo "Pulling latest code..."
-            git pull --ff-only origin main
+            echo "Fetching and resetting to latest code..."
+            git fetch origin main
+            git reset --hard origin/main
 
             echo "Installing dependencies..."
             npm ci
