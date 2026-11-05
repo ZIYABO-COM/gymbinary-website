@@ -1,72 +1,93 @@
-"use client";
-
-import { motion } from "framer-motion";
-import Button from "@/components/ui/Button";
-import PhoneMockup from "@/components/PhoneMockup";
-
-const stats = [
-  { value: "5", label: "Role-based dashboards" },
-  { value: "Multi", label: "Branch support, one login" },
-  { value: "Zero-cost", label: "WhatsApp renewal reminders" },
-];
-
+import Button from "./ui/Button";
+import Icon from "./ui/Icon";
+import ProductScreen from "./ProductScreen";
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-ink text-white pt-28 pb-24">
-      <div
-        className="absolute inset-0 bg-dot-grid pointer-events-none"
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at top right, rgba(250,204,21,0.10), transparent 55%)",
-        }}
-        aria-hidden
-      />
-
-      <div className="relative z-10 max-w-content mx-auto px-6 grid grid-cols-1 md:grid-cols-[1.05fr_0.95fr] gap-14 items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <span className="inline-block text-[13px] font-semibold uppercase tracking-widest text-accent bg-accent/10 px-3.5 py-1.5 rounded-full mb-4.5">
-            Multi-branch gym management
-          </span>
-          <h1 className="text-[clamp(36px,5vw,56px)] mb-5">
-            Run every branch, member, and trainer from{" "}
-            <span className="text-accent">one dashboard.</span>
-          </h1>
-          <p className="text-lg text-gray-300 max-w-[520px] mb-8">
-            Gym Binary replaces spreadsheets and WhatsApp chaos with one
-            system for members, leads, attendance, plans, and billing — built
-            for gyms with more than one location.
+    <section className="hero">
+      <div className="container hero-grid">
+        <div className="hero-copy">
+          <p className="eyebrow">
+            <span className="status-dot" />
+            YOUR GYM. CONNECTED.
           </p>
-          <div className="flex flex-wrap gap-3.5 mb-11">
-            <Button href="#demo" variant="primary">Book a Demo</Button>
-            <Button href="/?intent=trial#demo" variant="outline-dark">Start Free Trial</Button>
+          <h1>
+            Less admin.
+            <br />
+            More time for
+            <br />
+            <span>your members.</span>
+          </h1>
+          <p className="hero-description">
+            Members, memberships, payments and every branch. Bring the daily
+            work of running your gym into one clear, connected system.
+          </p>
+          <div className="hero-buttons">
+            <Button href="#demo">Book Demo</Button>
+            <Button href="/?intent=trial#demo" variant="secondary">
+              Start Free Trial
+            </Button>
+            <a className="hero-tour" href="#product-tour">
+              <span>
+                <Icon name="play" size={14} />
+              </span>
+              Explore the product
+            </a>
           </div>
-          <div className="flex flex-wrap gap-9">
-            {stats.map((s) => (
-              <div key={s.label}>
-                <strong className="block font-display text-2xl text-accent">
-                  {s.value}
-                </strong>
-                <span className="text-[13px] text-gray-300">{s.label}</span>
-              </div>
-            ))}
+          <div className="hero-proof">
+            <span>
+              <Icon name="branches" size={16} />
+              Multi-branch ready
+            </span>
+            <span>
+              <Icon name="phone" size={16} />
+              Installable web app
+            </span>
+            <span>
+              <Icon name="users" size={16} />
+              Role-based access
+            </span>
           </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
-        >
-          <PhoneMockup />
-        </motion.div>
+        </div>
+        <div className="hero-visual">
+          <div className="stage-orbit" aria-hidden="true" />
+          <div className="stage-caption">
+            <span className="status-dot" />
+            MULTI-BRANCH. ONE CLEAR VIEW.
+          </div>
+          <ProductScreen
+            screen="revenue-analytics"
+            className="hero-device-back"
+            priority
+          />
+          <ProductScreen
+            screen="owner-overview"
+            className="hero-device-front"
+            priority
+          />
+          <div className="stage-label">
+            <span className="icon-box">
+              <Icon name="branches" />
+            </span>
+            <span>
+              <strong>Every branch. One view.</strong>
+              <small>Made for the way you manage.</small>
+            </span>
+          </div>
+          <p className="screen-disclaimer">
+            Actual app screens · demonstration data
+          </p>
+        </div>
+      </div>
+      <div className="hero-bottom container">
+        <span>Built around the way real gyms work.</span>
+        <a href="#customers">PureFitness Studio</a>
+        <a href="#customers">
+          PRIMEFIT <small>FITNESS STUDIO</small>
+        </a>
+        <a className="hero-bottom-link" href="#customers">
+          Meet our customers
+          <Icon name="arrow" size={16} />
+        </a>
       </div>
     </section>
   );

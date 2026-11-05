@@ -1,34 +1,50 @@
-import type { Metadata } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/inter";
 import "./globals.css";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
+import { site } from "@/lib/site";
 export const metadata: Metadata = {
-  title: "Gym Binary — Smarter Gym. Stronger You. | Gym Management Software",
+  metadataBase: new URL(site.url),
+  title: {
+    default: "GymBinary | Connected Gym & Multi-Branch Management Software",
+    template: "%s | GymBinary",
+  },
   description:
-    "Gym Binary is multi-branch gym management software for Indian gym owners — members, leads, attendance, plans, billing and WhatsApp renewal reminders in one dashboard.",
+    "Bring members, memberships, payment records and every branch together. Explore GymBinary gym management software and book a product walkthrough.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    siteName: site.name,
+    title: "Less admin. More time for your members. | GymBinary",
+    description:
+      "Your gym. Connected. Members, memberships, payments and multi-branch operations in one workspace.",
+    url: site.url,
+    images: [
+      {
+        url: "/assets/social-card.png",
+        width: 1200,
+        height: 630,
+        alt: "GymBinary — Your gym. Connected.",
+      },
+    ],
+  },
+  twitter: { card: "summary_large_image", images: ["/assets/social-card.png"] },
+  icons: {
+    icon: "/assets/gym-binary-logo.png",
+    apple: "/assets/gym-binary-logo.png",
+  },
+  robots: { index: true, follow: true },
 };
-
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#111210",
+};
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

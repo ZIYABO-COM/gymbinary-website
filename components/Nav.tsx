@@ -1,141 +1,111 @@
 "use client";
-
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-
+import { useEffect, useState } from "react";
+import Brand from "./Brand";
+import ContactBar from "./ContactBar";
+import Icon from "./ui/Icon";
+import { site } from "@/lib/site";
 const links = [
-  { href: "#modules", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#benefits", label: "Solutions" },
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#modules", label: "Product" },
+  { href: "/#benefits", label: "Solutions" },
+  { href: "/#customers", label: "Customers" },
+  { href: "/#technology", label: "Technology" },
+  { href: "/#pricing", label: "Pricing" },
 ];
-
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.gymbinary.com";
-
 export default function Nav() {
   const [open, setOpen] = useState(false);
-
+  useEffect(() => {
+    function escape(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, []);
   return (
-    <header className="sticky top-0 z-50 bg-ink/85 backdrop-blur-md border-b border-charcoal-border">
-      <div className="max-w-content mx-auto px-6 py-3.5 flex items-center justify-between gap-6">
-        <Link href="#" className="flex items-center gap-3">
-          <Image
-            src="/assets/gym-binary-logo.png"
-            alt="Gym Binary logo"
-            width={72}
-            height={72}
-            className="shrink-0"
-          />
-          <span className="flex flex-col leading-tight">
-            <span className="font-display font-bold text-accent text-xl tracking-tight">
-              Gym Binary
-            </span>
-            <span className="text-[10.5px] font-semibold text-white uppercase tracking-widest">
-              Smarter Gym. Stronger You.
-            </span>
-          </span>
-        </Link>
-
-        <nav className="hidden md:flex items-center gap-7">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-gray-300 hover:text-white text-[14.5px] font-medium transition-colors"
-            >
-              {l.label}
+    <>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <header className="site-header">
+        <ContactBar />
+        <div className="container nav-row">
+          <Brand />
+          <nav className="desktop-nav" aria-label="Main navigation">
+            {links.map((l) => (
+              <a key={l.href} href={l.href}>
+                {l.label}
+              </a>
+            ))}
+          </nav>
+          <div className="nav-actions">
+            <a className="login-link" href={site.appUrl}>
+              Log in
+              <Icon name="diagonal" size={14} />
             </a>
-          ))}
-        </nav>
-
-        <div className="hidden md:flex items-center gap-3">
-          <a href={`${APP_URL}/login`} className="text-gray-300 hover:text-white text-[14.5px] font-medium px-1.5 py-2.5">
-            Log In
-          </a>
-          <a
-            href="#demo"
-            className="inline-flex items-center rounded-full border border-white/25 text-white hover:border-white px-4.5 py-2.5 text-sm font-semibold transition-colors"
+            <a className="button button-dark nav-demo" href="/#demo">
+              Book Demo
+              <Icon name="arrow" size={16} />
+            </a>
+            <a
+              className="button button-primary nav-trial"
+              href="/?intent=trial#demo"
+            >
+              Start Free Trial
+              <Icon name="arrow" size={16} />
+            </a>
+          </div>
+          <button
+            className="menu-toggle"
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen(!open)}
           >
-            Book Demo
-          </a>
-          <a
-            href="/?intent=trial#demo"
-            className="inline-flex items-center rounded-full bg-accent text-ink px-4.5 py-2.5 text-sm font-semibold hover:-translate-y-0.5 transition-transform"
-          >
-            Start Free Trial
-          </a>
+            {open ? <Icon name="close" /> : <span className="menu-bars" />}
+          </button>
         </div>
-
-        <button
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="md:hidden flex flex-col gap-1.5 p-2"
-        >
-          <span
-            className={`block w-5 h-0.5 bg-white transition-transform ${
-              open ? "translate-y-2 rotate-45" : ""
-            }`}
-          />
-          <span className={`block w-5 h-0.5 bg-white transition-opacity ${open ? "opacity-0" : ""}`} />
-          <span
-            className={`block w-5 h-0.5 bg-white transition-transform ${
-              open ? "-translate-y-2 -rotate-45" : ""
-            }`}
-          />
-        </button>
-      </div>
-
-      <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="md:hidden overflow-hidden border-t border-charcoal-border"
+          <nav
+            className="mobile-nav"
+            id="mobile-navigation"
+            aria-label="Mobile navigation"
           >
-            <div className="px-6 py-5 flex flex-col gap-4">
-              {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="text-gray-300 hover:text-white text-[15px] font-medium"
-                >
-                  {l.label}
-                </a>
-              ))}
-              <div className="flex flex-col gap-3 pt-2">
-                <a
-                  href={`${APP_URL}/login`}
-                  onClick={() => setOpen(false)}
-                  className="text-gray-300 hover:text-white text-[15px] font-medium"
-                >
-                  Log In
-                </a>
-                <a
-                  href="#demo"
-                  onClick={() => setOpen(false)}
-                  className="inline-flex justify-center rounded-full border border-white/25 text-white px-4.5 py-2.5 text-sm font-semibold"
-                >
-                  Book Demo
-                </a>
-                <a
-                  href="/?intent=trial#demo"
-                  onClick={() => setOpen(false)}
-                  className="inline-flex justify-center rounded-full bg-accent text-ink px-4.5 py-2.5 text-sm font-semibold"
-                >
-                  Start Free Trial
-                </a>
-              </div>
-            </div>
-          </motion.div>
+            {links.map((l) => (
+              <a key={l.href} href={l.href} onClick={() => setOpen(false)}>
+                {l.label}
+                <Icon name="arrow" size={17} />
+              </a>
+            ))}
+            <a href="/#product-tour" onClick={() => setOpen(false)}>
+              Product tour
+              <Icon name="arrow" size={17} />
+            </a>
+            <a href="/#faq" onClick={() => setOpen(false)}>
+              FAQ
+              <Icon name="arrow" size={17} />
+            </a>
+            <a href={site.appUrl}>
+              Log in
+              <Icon name="diagonal" size={17} />
+            </a>
+            <a
+              className="button button-primary"
+              href="/#demo"
+              onClick={() => setOpen(false)}
+            >
+              Book Demo
+              <Icon name="arrow" size={17} />
+            </a>
+            <a
+              className="button button-dark"
+              href="/?intent=trial#demo"
+              onClick={() => setOpen(false)}
+            >
+              Start Free Trial
+              <Icon name="arrow" size={17} />
+            </a>
+          </nav>
         )}
-      </AnimatePresence>
-    </header>
+      </header>
+    </>
   );
 }

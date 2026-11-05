@@ -1,50 +1,69 @@
-import SectionHeading from "@/components/ui/SectionHeading";
-
-const faqs = [
+export const faqs = [
   {
-    q: "Does Gym Binary support multiple branches?",
-    a: "Yes — Gym Binary is built around gym groups with multiple branches from day one. Each branch keeps its own staff and members while the owner sees a rolled-up view across all locations.",
+    q: "Can I manage a single gym as well as multiple branches?",
+    a: "Yes. GymBinary supports individual locations and multi-branch operations. Owners can switch between branch-specific and combined views. We can walk through the setup for your gym during a demo.",
   },
   {
-    q: "How does WhatsApp reminders work?",
-    a: "Gym Binary generates a direct WhatsApp link for each member whose plan is expiring, so your front desk can send a reminder in one tap — no third-party API cost or approval process involved.",
+    q: "Do WhatsApp reminders send automatically?",
+    a: "The current workflow opens a prefilled WhatsApp message for staff to review and send. It is a staff-initiated action. Automated sending is not presented as an included feature; discuss any automation requirements with the team.",
   },
   {
-    q: "Is online payment collection included?",
-    a: "Gym Binary currently supports recording payments made by cash, UPI, or card, and automatically keeps every member's balance accurate. Direct online payment collection is on our roadmap.",
+    q: "Is GymBinary available on mobile?",
+    a: "Yes. GymBinary is a web application and Progressive Web App (PWA). You can use it through a compatible browser and add it to the home screen where supported. Connected workflows need an internet connection.",
   },
   {
-    q: "What roles does the software support?",
-    a: "Owner, Admin, Trainer, Front Desk, and Member — each with a dashboard scoped to what they need. Admins manage staff and members without seeing financials; only Owners see full revenue data.",
+    q: "Can I record payments and track balances?",
+    a: "Yes. GymBinary supports payment recording and outstanding balance tracking alongside member subscriptions. Recording a payment does not mean the application processes an online payment through a payment gateway.",
   },
   {
-    q: "Can I try Gym Binary before paying?",
-    a: "Yes, every plan starts with a free trial so you can set up your branches and test the workflow with your own team before committing.",
+    q: "Can different team members have different access?",
+    a: "Yes. The application supports Owner, Admin, Trainer, Front Desk and Member roles. Access also depends on branch context. Ask us to demonstrate the permissions relevant to your team.",
+  },
+  {
+    q: "Can I move data from my existing system?",
+    a: "Please share what export files or records your current system provides. The team can review the available format, data quality and migration scope before confirming what is possible.",
+  },
+  {
+    q: "How can I start a free trial?",
+    a: "Choose Start Free Trial and submit your gym details. The GymBinary team will contact you to discuss the setup and confirm the trial duration and terms. Submitting a request does not automatically create an account.",
+  },
+  {
+    q: "How do I get pricing?",
+    a: "Book a demo or contact us with your gym’s branch and team requirements. We will discuss the product and provide pricing and subscription terms directly.",
+  },
+  {
+    q: "How can I reach the GymBinary team?",
+    a: "Email contact@gymbinary.com, call India on +91 8129905061, or call the UAE number +971 52 184 8128. You can also submit the demo request form on this page.",
   },
 ];
-
 export default function Faq() {
   return (
-    <section id="faq" className="py-24 bg-gray-50">
-      <div className="max-w-content mx-auto px-6">
-        <SectionHeading
-          eyebrow="FAQ"
-          title="Questions gym owners ask us first."
-          center
-        />
-        <div className="max-w-[760px] mx-auto">
-          {faqs.map((item, i) => (
-            <details
-              key={item.q}
-              className="faq-item bg-white border border-gray-200 rounded-md p-5 mb-3"
-              open={i === 0}
-            >
-              <summary className="cursor-pointer font-semibold text-base list-none flex justify-between items-center">
-                {item.q}
+    <section className="section faq-section" id="faq">
+      <div className="container faq-grid">
+        <div className="section-heading">
+          <p className="eyebrow">A LITTLE MORE CLARITY</p>
+          <h2>
+            Good questions.
+            <br />
+            Clear answers.
+          </h2>
+          <p className="section-intro">
+            Getting to know GymBinary?
+            <br />
+            Start here, or talk directly with our team.
+          </p>
+          <a href="#demo" className="text-link">
+            Ask us a question<span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div className="faq-list">
+          {faqs.map((f, i) => (
+            <details className="faq-item" key={f.q} open={i === 0}>
+              <summary>
+                {f.q}
+                <span aria-hidden="true" className="faq-indicator" />
               </summary>
-              <p className="mt-3.5 text-[14.5px] text-ui-muted leading-relaxed">
-                {item.a}
-              </p>
+              <p>{f.a}</p>
             </details>
           ))}
         </div>

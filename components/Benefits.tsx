@@ -1,72 +1,71 @@
-"use client";
-
-import { motion } from "framer-motion";
-import SectionHeading from "@/components/ui/SectionHeading";
-
-const groups = [
+import SectionHeading from "./ui/SectionHeading";
+import Icon from "./ui/Icon";
+const roles = [
   {
-    title: "Gym Owners",
+    number: "01",
+    icon: "chart",
+    name: "For gym owners",
+    title: "See the business clearly.",
+    text: "Stay connected to members, recorded revenue, outstanding balances and branch performance.",
     items: [
-      "Full visibility across every branch",
-      "Real revenue, expense & balance data",
-      "Monitor subscriptions & retention",
-      "Executive-level reports on demand",
+      "Combined and branch-level views",
+      "Revenue and payment reporting",
+      "Staff and branch oversight",
     ],
   },
   {
-    title: "Trainers & Front Desk",
+    number: "02",
+    icon: "users",
+    name: "For trainers & front desk",
+    title: "Keep the day moving.",
+    text: "Bring routine member administration into one workspace, with access shaped by role.",
     items: [
-      "Fast member add & plan assignment",
-      "Daily dashboard: expiring members, leads",
-      "QR-based attendance logging",
-      "WhatsApp reminders in one tap",
+      "Member enrolment and plan assignment",
+      "Payments, balances and expenses",
+      "Leads and WhatsApp follow-ups",
     ],
   },
   {
-    title: "Members",
+    number: "03",
+    icon: "scan",
+    name: "For members",
+    title: "A simpler check-in.",
+    text: "Provide a dedicated member sign-in experience with QR identification and membership-linked check-in.",
     items: [
-      "Check subscription status anytime",
-      "View attendance & health metrics",
-      "Get renewal reminders before expiry",
-      "Update their own profile",
+      "Individual member login",
+      "Member QR identification",
+      "In-app self check-in",
     ],
   },
 ];
-
 export default function Benefits() {
   return (
-    <section id="benefits" className="py-24 bg-gray-50">
-      <div className="max-w-content mx-auto px-6">
+    <section className="section benefits-section" id="benefits">
+      <div className="container">
         <SectionHeading
-          eyebrow="Built For Everyone On Your Team"
-          title="Different roles. One shared source of truth."
-          center
+          eyebrow="MADE FOR YOUR TEAM"
+          title="Different responsibilities. Shared clarity."
+          subtitle="Put the right tools in the hands of the people who keep your gym running."
         />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5.5">
-          {groups.map((group, i) => (
-            <motion.div
-              key={group.title}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.45, delay: i * 0.1, ease: "easeOut" }}
-              className="bg-white border border-gray-200 rounded-lg p-7.5"
-            >
-              <h3 className="text-[19px] mb-4 flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-accent" />
-                {group.title}
-              </h3>
-              <ul>
-                {group.items.map((item) => (
-                  <li
-                    key={item}
-                    className="text-[14.5px] text-ui-muted py-1.5 border-b border-dashed border-gray-200 last:border-none"
-                  >
-                    {item}
+        <div className="benefits-grid">
+          {roles.map((r) => (
+            <article className="benefit-card" key={r.name}>
+              <div className="benefit-top">
+                <Icon name={r.icon} size={28} />
+                <span>{r.number}</span>
+              </div>
+              <p className="role-label">{r.name}</p>
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+              <ul className="check-list">
+                {r.items.map((i) => (
+                  <li key={i}>
+                    <Icon name="check" size={16} />
+                    {i}
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </article>
           ))}
         </div>
       </div>

@@ -1,79 +1,76 @@
-"use client";
-
-import { motion } from "framer-motion";
-import SectionHeading from "@/components/ui/SectionHeading";
-
+import SectionHeading from "./ui/SectionHeading";
+import Icon from "./ui/Icon";
 const modules = [
   {
-    title: "Member Management",
-    body: "Profiles, health metrics, emergency contacts, subscription history, and payment records in one place.",
-    tag: "Core",
+    icon: "users",
+    title: "Member management",
+    body: "Keep member profiles, contact details, subscription history and payment records together.",
+    tag: "MEMBERS",
   },
   {
-    title: "Leads & CRM",
-    body: "Capture walk-ins and inquiries, track follow-ups, and see today's leads at a glance.",
-    tag: "Growth",
+    icon: "calendar",
+    title: "Plans & subscriptions",
+    body: "Create plans, assign memberships and manage renewals around your gym’s offering.",
+    tag: "MEMBERSHIPS",
   },
   {
-    title: "Attendance",
-    body: "Log check-ins per member and branch, and spot drop-off before it becomes a churned member.",
-    tag: "Core",
+    icon: "wallet",
+    title: "Payments & balances",
+    body: "Record payments and see outstanding balances. Payment recording is separate from online payment collection.",
+    tag: "BILLING",
   },
   {
-    title: "Plans & Subscriptions",
-    body: "Build your own plan groups — 3-month, 6-month, annual — and assign or renew in a few taps.",
-    tag: "Core",
+    icon: "message",
+    title: "WhatsApp follow-ups",
+    body: "Open prefilled renewal and balance reminders. Your staff review and send each message through WhatsApp.",
+    tag: "ENGAGEMENT",
   },
   {
-    title: "Payments & Balances",
-    body: "Record cash, UPI, or card payments and let the system recalculate every member's balance automatically.",
-    tag: "Billing",
+    icon: "lead",
+    title: "Leads & follow-ups",
+    body: "Capture enquiries and walk-ins, maintain contact details and keep follow-up work visible.",
+    tag: "GROWTH",
   },
   {
-    title: "Expenses",
-    body: "Log daily branch expenses alongside revenue for a true picture of what each location actually earns.",
-    tag: "Finance",
+    icon: "scan",
+    title: "Member check-in",
+    body: "Support membership-linked check-in and member QR identification within the application.",
+    tag: "ATTENDANCE",
   },
   {
-    title: "Staff & Trainer Allocation",
-    body: "Add staff, assign trainers to branches, and control exactly what each role can see and do.",
-    tag: "Ops",
+    icon: "chart",
+    title: "Expenses & reports",
+    body: "Record operating expenses and review revenue reporting with branch-level context.",
+    tag: "INSIGHTS",
   },
   {
-    title: "Reports & Revenue Analytics",
-    body: "Owner-level dashboards for revenue, branch performance, and business KPIs — updated in real time.",
-    tag: "Insights",
+    icon: "branches",
+    title: "Branches & staff",
+    body: "Organize locations and staff, with role-based access for owners and their teams.",
+    tag: "OPERATIONS",
   },
 ];
-
 export default function Modules() {
   return (
-    <section id="modules" className="py-24 bg-gray-50">
-      <div className="max-w-content mx-auto px-6">
+    <section className="section" id="modules">
+      <div className="container">
         <SectionHeading
-          eyebrow="Core Modules"
-          title="Everything your front desk, trainers, and owners actually use."
-          center
+          eyebrow="THE PRODUCT"
+          title="The essentials, working together."
+          subtitle="A connected set of tools for the work behind every well-run gym."
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5.5">
-          {modules.map((m, i) => (
-            <motion.div
-              key={m.title}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.4, delay: (i % 4) * 0.07, ease: "easeOut" }}
-              className="bg-white border border-gray-200 rounded-lg p-7 hover:shadow-soft hover:-translate-y-1 transition-all"
-            >
-              <div className="w-[46px] h-[46px] rounded-xl bg-accent/[0.15] text-accent-dark flex items-center justify-center text-xl mb-4.5">
-                ●
+        <div className="modules-grid">
+          {modules.map((m) => (
+            <article className="module-card" key={m.title}>
+              <div className="module-top">
+                <span className="icon-box">
+                  <Icon name={m.icon} />
+                </span>
+                <span className="module-tag">{m.tag}</span>
               </div>
-              <h3 className="text-[17px] mb-2">{m.title}</h3>
-              <p className="text-sm text-ui-muted">{m.body}</p>
-              <span className="inline-block mt-3.5 text-[11.5px] font-semibold text-ui-muted-soft bg-gray-100 px-2.5 py-1 rounded-full">
-                {m.tag}
-              </span>
-            </motion.div>
+              <h3>{m.title}</h3>
+              <p>{m.body}</p>
+            </article>
           ))}
         </div>
       </div>

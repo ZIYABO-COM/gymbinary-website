@@ -1,60 +1,64 @@
-"use client";
-
-import { motion } from "framer-motion";
-import SectionHeading from "@/components/ui/SectionHeading";
-
-const roles = [
-  {
-    tag: "Trainer",
-    title: "Manage members on the floor",
-    items: ["Member directory & QR check-in", "Add leads and follow-ups", "Assign plans, log expenses"],
-  },
-  {
-    tag: "Owner",
-    title: "See the whole business",
-    items: ["Revenue & branch performance", "Staff overview across locations", "Executive reports & KPIs"],
-  },
-  {
-    tag: "Member",
-    title: "Self-serve from their phone",
-    items: ["Attendance & subscription status", "Health metrics & profile", "Notifications & plan details"],
-  },
-];
-
+import ProductScreen from "./ProductScreen";
+import Button from "./ui/Button";
+import Icon from "./ui/Icon";
 export default function MobileExperience() {
   return (
-    <section className="py-24 bg-ink text-white">
-      <div className="max-w-content mx-auto px-6">
-        <SectionHeading
-          eyebrow="Mobile Experience"
-          title="One app. Five roles. No separate builds."
-          subtitle="After login, Gym Binary routes each person to the dashboard built for their role — Trainers, Admins, Owners, Members, and Front Desk all share the same app."
-          dark
-        />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5.5">
-          {roles.map((role, i) => (
-            <motion.div
-              key={role.tag}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.45, delay: i * 0.1, ease: "easeOut" }}
-              className="bg-charcoal border border-charcoal-border rounded-lg p-7"
-            >
-              <span className="inline-block text-[10px] font-semibold text-accent bg-accent/[0.15] px-2 py-0.5 rounded-full mb-3.5">
-                {role.tag}
+    <section className="section mobile-section" id="mobile-experience">
+      <div className="container mobile-grid">
+        <div className="mobile-art">
+          <span className="mobile-art-tag">
+            <Icon name="phone" size={17} />
+            Progressive Web App
+          </span>
+          <ProductScreen screen="enrolment" />
+          <span className="mobile-art-note">
+            Actual app screen · empty enrolment form
+          </span>
+        </div>
+        <div className="mobile-copy">
+          <p className="eyebrow">ON THE GYM FLOOR. ON THE GO.</p>
+          <h2>
+            Your gym doesn’t stand still.
+            <br />
+            Neither should your software.
+          </h2>
+          <p>
+            Use GymBinary through your browser, or add the web app to your home
+            screen on a supported device. Keep the same connected workspace
+            close to hand.
+          </p>
+          <div className="mobile-points">
+            <div>
+              <Icon name="globe" />
+              <span>
+                <strong>Browser access</strong>
+                <small>Open the application on a compatible browser.</small>
               </span>
-              <h4 className="text-[17px] text-white mb-2.5">{role.title}</h4>
-              <ul>
-                {role.items.map((item) => (
-                  <li key={item} className="text-[13.5px] text-gray-300 py-1.5 pl-4.5 relative">
-                    <span className="absolute left-0 text-accent font-bold">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+            </div>
+            <div>
+              <Icon name="phone" />
+              <span>
+                <strong>A place on your home screen</strong>
+                <small>
+                  Install the PWA where your device and browser support it.
+                </small>
+              </span>
+            </div>
+            <div>
+              <Icon name="users" />
+              <span>
+                <strong>Access shaped by role</strong>
+                <small>Owners, admins, trainers, front desk and members.</small>
+              </span>
+            </div>
+          </div>
+          <p className="mobile-availability">
+            GymBinary is currently available as a web app / PWA. Internet access
+            is required for connected workflows.
+          </p>
+          <Button href="#demo" variant="text">
+            Explore the mobile experience
+          </Button>
         </div>
       </div>
     </section>

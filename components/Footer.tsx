@@ -1,90 +1,87 @@
-import Image from "next/image";
-import Link from "next/link";
-
+import Brand from "./Brand";
+import SocialLinks from "./SocialLinks";
+import Icon from "./ui/Icon";
+import { site } from "@/lib/site";
 const columns = [
   {
     title: "Product",
     links: [
-      { label: "Features", href: "#modules" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "How It Works", href: "#how-it-works" },
+      ["Product tour", "/#product-tour"],
+      ["Features", "/#modules"],
+      ["Multi-branch", "/#multi-branch"],
+      ["Mobile experience", "/#mobile-experience"],
+      ["Pricing", "/#pricing"],
     ],
   },
   {
-    title: "Solutions",
+    title: "Explore",
     links: [
-      { label: "Gym Owners", href: "#benefits" },
-      { label: "Trainers", href: "#benefits" },
-      { label: "Members", href: "#benefits" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Contact", href: "#" },
-      { label: "Blog", href: "#" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Service", href: "#" },
-      { label: "Help Center", href: "#" },
+      ["Solutions", "/#benefits"],
+      ["Customer perspectives", "/#customers"],
+      ["Getting started", "/#how-it-works"],
+      ["Technology", "/#technology"],
+      ["FAQ", "/#faq"],
     ],
   },
 ];
-
 export default function Footer() {
   return (
-    <footer className="bg-ink-soft text-gray-300 pt-16 pb-7.5 border-t border-charcoal-border">
-      <div className="max-w-content mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr] gap-8 mb-12">
-          <div>
-            <Link href="#" className="flex items-center gap-3 mb-3.5">
-              <Image
-                src="/assets/gym-binary-logo.png"
-                alt="Gym Binary logo"
-                width={64}
-                height={64}
-                className="shrink-0"
-              />
-              <span className="flex flex-col leading-tight">
-                <span className="font-display font-bold text-accent text-lg">Gym Binary</span>
-                <span className="text-[10px] font-semibold text-white uppercase tracking-widest">
-                  Smarter Gym. Stronger You.
-                </span>
-              </span>
-            </Link>
-            <p className="text-[13.5px] text-ui-muted-soft max-w-[260px]">
-              Multi-branch gym management software for growing fitness
-              businesses.
+    <footer className="site-footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <Brand footer />
+            <p>
+              Bring the business of running your gym into one connected
+              workspace.
             </p>
+            <SocialLinks className="footer-social" />
           </div>
-          {columns.map((col) => (
-            <div key={col.title}>
-              <h5 className="text-[13px] text-white uppercase tracking-wide mb-4">
-                {col.title}
-              </h5>
+          {columns.map((c) => (
+            <div className="footer-column" key={c.title}>
+              <h2>{c.title}</h2>
               <ul>
-                {col.links.map((l) => (
-                  <li key={l.label} className="mb-2.5">
-                    <a href={l.href} className="text-sm text-gray-300 hover:text-accent">
-                      {l.label}
-                    </a>
+                {c.links.map(([label, href]) => (
+                  <li key={label}>
+                    <a href={href}>{label}</a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+          <div className="footer-column footer-contact">
+            <h2>Let’s connect</h2>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+            <span>INDIA</span>
+            <a href={site.india.href}>{site.india.label}</a>
+            <span>UAE</span>
+            <a href={site.uae.href}>{site.uae.label}</a>
+            <a className="footer-demo" href="/#demo">
+              Book Demo
+              <Icon name="arrow" size={16} />
+            </a>
+            <a className="footer-demo" href="/?intent=trial#demo">
+              Start Free Trial
+              <Icon name="arrow" size={16} />
+            </a>
+          </div>
         </div>
-        <div className="flex flex-wrap justify-between items-center gap-3 border-t border-charcoal-border pt-6 text-[13px] text-ui-muted-soft">
-          <span>© 2026 Gym Binary. All rights reserved.</span>
-          <div className="flex gap-4">
-            <a href="#" className="hover:text-accent">Instagram</a>
-            <a href="#" className="hover:text-accent">LinkedIn</a>
-            <a href="#" className="hover:text-accent">YouTube</a>
+        <div className="footer-bottom">
+          <span>
+            © {new Date().getFullYear()} GymBinary. A product of Ziyabo
+            Technologies.
+          </span>
+          <div>
+            <a href="/website-privacy">Website privacy</a>
+            <a
+              href={`mailto:${site.email}?subject=GymBinary%20subscription%20terms`}
+            >
+              Subscription enquiries
+            </a>
+            <a href={site.appUrl}>
+              App login
+              <Icon name="diagonal" size={13} />
+            </a>
           </div>
         </div>
       </div>

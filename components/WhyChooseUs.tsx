@@ -1,52 +1,45 @@
-"use client";
-
-import { motion } from "framer-motion";
-import SectionHeading from "@/components/ui/SectionHeading";
-
-const items = [
+import Icon from "./ui/Icon";
+const reasons = [
   {
-    title: "True multi-branch",
-    body: "One tenant, many branches — each with its own staff, members, and settings, rolled up for the owner.",
+    icon: "branches",
+    title: "One location or many",
+    text: "Manage daily work at a single gym and keep a connected view as your branches grow.",
   },
   {
-    title: "Role-based access",
-    body: "Owner, Admin, Trainer, Front Desk, and Member each see exactly what they need — nothing more.",
+    icon: "wallet",
+    title: "A clearer financial picture",
+    text: "Keep payments, outstanding balances and expenses alongside your member records.",
   },
   {
-    title: "Real cost tracking",
-    body: "Payments, balances, and expenses are recalculated from source records — never stale numbers.",
+    icon: "message",
+    title: "Follow-ups within reach",
+    text: "Find expiring memberships and open a ready-to-send WhatsApp reminder.",
   },
   {
-    title: "WhatsApp renewals",
-    body: "One-tap WhatsApp links for every member expiring soon — no API fees, no approval wait.",
+    icon: "support",
+    title: "People behind the product",
+    text: "Speak directly with the GymBinary team about your gym’s workflow and questions.",
   },
 ];
-
 export default function WhyChooseUs() {
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-content mx-auto px-6">
-        <SectionHeading
-          eyebrow="Why Gym Binary"
-          title="Built for gyms that outgrew a spreadsheet."
-          subtitle="Every feature below exists in the product today — no vaporware, no “coming soon” filler."
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5.5">
-          {items.map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.45, delay: i * 0.08, ease: "easeOut" }}
-              className="bg-gray-50 border border-gray-200 rounded-lg p-7"
-            >
-              <div className="w-[46px] h-[46px] rounded-xl bg-ink text-accent flex items-center justify-center text-xl mb-4.5">
-                ◆
-              </div>
-              <h3 className="text-lg mb-2.5">{item.title}</h3>
-              <p className="text-[14.5px] text-ui-muted">{item.body}</p>
-            </motion.div>
+    <section id="why-gymbinary" className="section why-section">
+      <div className="container">
+        <div className="section-heading compact">
+          <p className="eyebrow">WHY GYMBINARY</p>
+          <h2>
+            Your energy belongs on the gym floor.
+            <br />
+            Your admin belongs here.
+          </h2>
+        </div>
+        <div className="reason-grid">
+          {reasons.map((r) => (
+            <article className="reason" key={r.title}>
+              <Icon name={r.icon} size={28} />
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+            </article>
           ))}
         </div>
       </div>

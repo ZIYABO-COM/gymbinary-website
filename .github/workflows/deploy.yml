@@ -17,13 +17,16 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -eu
             cd /home/opc/GymBrain/gymbinary-website
 
             echo "Pulling latest code..."
-            git pull origin main
+            git pull --ff-only origin main
 
             echo "Installing dependencies..."
-            npm install
+            npm ci
+
+            npm test
 
             echo "Building website..."
             npm run build

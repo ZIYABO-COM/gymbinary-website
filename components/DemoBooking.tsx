@@ -1,217 +1,326 @@
 "use client";
-
-import { useState, useEffect, FormEvent } from "react";
-import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
-import SectionHeading from "@/components/ui/SectionHeading";
-
-type Status = "idle" | "loading" | "success" | "error";
-type Intent = "demo" | "trial";
-
-const timeSlots = [
-  "Morning (9am–12pm)",
-  "Afternoon (12pm–4pm)",
-  "Evening (4pm–8pm)",
-];
-
-const copy: Record<Intent, { eyebrow: string; title: string; subtitle: string; cta: string }> = {
-  demo: {
-    eyebrow: "Book a Demo",
-    title: "See Gym Binary running on your own plans and branches.",
-    subtitle:
-      "Tell us a bit about your gym and we'll get back to you within one business day to schedule a walkthrough.",
-    cta: "Book My Demo",
-  },
-  trial: {
-    eyebrow: "Start Free Trial",
-    title: "Get Gym Binary set up for your gym — free to start.",
-    subtitle:
-      "Share a few details and we'll personally set up your account and send your login within one business day. No card required.",
-    cta: "Start My Free Trial",
-  },
-};
-
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import Icon from "./ui/Icon";
+import SocialLinks from "./SocialLinks";
+import { site } from "@/lib/site";
+type Status = "idle" | "sending" | "success" | "error";
 export default function DemoBooking() {
-  const searchParams = useSearchParams();
-  const rawIntent = searchParams.get("intent");
-  const intent: Intent = rawIntent === "trial" ? "trial" : "demo";
-  const plan = searchParams.get("plan") ?? "";
-
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [messageDefault, setMessageDefault] = useState("");
-
+  const [isTrial, setIsTrial] = useState(false);
   useEffect(() => {
-    if (intent === "trial" && plan) {
-      setMessageDefault(`Interested in the ${plan} plan.`);
-    } else {
-      setMessageDefault("");
-    }
-  }, [intent, plan]);
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    setIsTrial(
+      new URLSearchParams(window.location.search).get("intent") === "trial",
+    );
+  }, []);
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState("");
+  const errorRef = useRef<HTMLDivElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("loading");
-    setErrorMsg("");
-
+    if (status === "sending") return;
     const form = e.currentTarget;
     const data = new FormData(form);
-    const payload = {
-      intent,
-      plan,
-      name: data.get("name")?.toString() ?? "",
-      gymName: data.get("gymName")?.toString() ?? "",
-      email: data.get("email")?.toString() ?? "",
-      phone: data.get("phone")?.toString() ?? "",
-      country: data.get("country")?.toString() ?? "",
-      preferredTime: data.get("preferredTime")?.toString() ?? "",
-      message: data.get("message")?.toString() ?? "",
-    };
-
+    setStatus("sending");
+    setError("");
+    const payload = Object.fromEntries(data.entries());
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
     try {
-      const res = await fetch("/api/demo", {
+      const response = await fetch("/api/demo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...payload,
+          intent: isTrial ? "trial" : "demo",
+          consent: data.get("consent") === "on",
+        }),
+        signal: controller.signal,
       });
-      const json = await res.json();
-
-      if (!res.ok) {
-        setStatus("error");
-        setErrorMsg(json.error || "Something went wrong. Please try again.");
-        return;
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) {
+        const problem = new Error(
+          typeof result?.error === "string"
+            ? result.error
+            : "We could not send your request. Please try again or contact us directly.",
+        );
+        problem.name = "EnquiryError";
+        throw problem;
       }
-
       setStatus("success");
       form.reset();
-    } catch {
+      setTimeout(() => successRef.current?.focus(), 0);
+    } catch (err) {
       setStatus("error");
-      setErrorMsg("Network error — please check your connection and try again.");
+      setError(
+        err instanceof Error && err.name === "EnquiryError"
+          ? err.message
+          : err instanceof Error && err.name === "AbortError"
+            ? "The request timed out. Please try again or contact us directly."
+            : "We could not reach our enquiry service. Please try again or contact us by email or phone.",
+      );
+      setTimeout(() => errorRef.current?.focus(), 0);
+    } finally {
+      window.clearTimeout(timeout);
     }
   }
-
-  const text = copy[intent];
-
   return (
-    <section id="demo" className="py-24 bg-gray-50">
-      <div className="max-w-content mx-auto px-6">
-        <SectionHeading
-          eyebrow={text.eyebrow}
-          title={text.title}
-          subtitle={text.subtitle}
-          center
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-          className="max-w-[640px] mx-auto bg-white border border-gray-200 rounded-lg p-7.5"
-        >
+    <section className="section demo-section" id="demo">
+      <div className="container demo-grid">
+        <div className="demo-copy">
+          <p className="eyebrow">LET’S TALK ABOUT YOUR GYM</p>
+          <h2>
+            {isTrial ? (
+              <>
+                Try GymBinary.
+                <br />
+                With your own gym.
+              </>
+            ) : (
+              <>
+                Meet your next
+                <br />
+                way of working.
+              </>
+            )}
+          </h2>
+          <p>
+            {isTrial
+              ? "Tell us about your gym to request a free trial. Our team will get in touch to discuss your setup and confirm the trial arrangements."
+              : "See the workflows that matter to you. Tell us a little about your gym and our team will get in touch to arrange a product walkthrough."}
+          </p>
+          <div className="contact-options">
+            <div className="contact-option">
+              <span className="icon-box">
+                <Icon name="mail" size={19} />
+              </span>
+              <span>
+                <small>Email GymBinary</small>
+                <a href={`mailto:${site.email}`}>{site.email}</a>
+              </span>
+            </div>
+            <div className="contact-option">
+              <span className="icon-box">
+                <Icon name="phone" size={19} />
+              </span>
+              <span>
+                <small>India</small>
+                <a href={site.india.href}>{site.india.label}</a>
+              </span>
+            </div>
+            <div className="contact-option">
+              <span className="icon-box">
+                <Icon name="phone" size={19} />
+              </span>
+              <span>
+                <small>UAE</small>
+                <a href={site.uae.href}>{site.uae.label}</a>
+              </span>
+            </div>
+          </div>
+          <SocialLinks className="demo-social" />
+        </div>
+        <div className="demo-form">
           {status === "success" ? (
-            <div className="text-center py-8">
-              <div className="w-12 h-12 rounded-full bg-accent/15 text-accent-dark flex items-center justify-center text-2xl mx-auto mb-4">
-                ✓
-              </div>
-              <h3 className="text-xl mb-2">Request sent</h3>
-              <p className="text-ui-muted text-sm">
-                {intent === "trial"
-                  ? "Thanks — we'll set up your account and email your login within one business day."
-                  : "Thanks — we've got your details and will reach out within one business day."}
+            <div
+              className="form-success"
+              ref={successRef}
+              tabIndex={-1}
+              role="status"
+            >
+              <span className="icon-box">
+                <Icon name="check" size={25} />
+              </span>
+              <h3>Your request is on its way.</h3>
+              <p>
+                {isTrial
+                  ? "Your free-trial request has been sent. The GymBinary team will contact you about your setup and confirm the trial arrangements."
+                  : "Thank you for getting in touch. The GymBinary team will contact you to arrange a demo or discuss a free trial."}
               </p>
+              <button onClick={() => setStatus("idle")}>
+                Send another enquiry
+              </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input type="hidden" name="intent" value={intent} />
-              {plan && <input type="hidden" name="plan" value={plan} />}
-
-              <Field label="Name" name="name" required />
-              <Field label="Gym Name" name="gymName" required={intent === "trial"} />
-              <Field label="Email" name="email" type="email" required />
-              <Field label="Phone" name="phone" type="tel" required />
-              <Field label="Country" name="country" />
-
-              {intent === "demo" ? (
-                <div>
-                  <label className="block text-sm font-medium mb-1.5" htmlFor="preferredTime">
-                    Preferred Time
-                  </label>
-                  <select
-                    id="preferredTime"
-                    name="preferredTime"
-                    className="w-full border border-gray-300 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent-dark"
-                  >
-                    <option value="">Select a slot</option>
-                    {timeSlots.map((slot) => (
-                      <option key={slot} value={slot}>
-                        {slot}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <Field label="Number of Branches" name="preferredTime" />
-              )}
-
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium mb-1.5" htmlFor="message">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  defaultValue={messageDefault}
-                  key={messageDefault}
-                  className="w-full border border-gray-300 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent-dark"
-                  placeholder="Current tools you use, anything else we should know..."
+            <form onSubmit={submit}>
+              <fieldset className="enquiry-intent">
+                <legend className="sr-only">Enquiry type</legend>
+                <button
+                  type="button"
+                  disabled={status === "sending"}
+                  aria-pressed={!isTrial}
+                  onClick={() => {
+                    setIsTrial(false);
+                    setStatus("idle");
+                    setError("");
+                  }}
+                >
+                  Book Demo
+                </button>
+                <button
+                  type="button"
+                  disabled={status === "sending"}
+                  aria-pressed={isTrial}
+                  onClick={() => {
+                    setIsTrial(true);
+                    setStatus("idle");
+                    setError("");
+                  }}
+                >
+                  Start Free Trial
+                </button>
+              </fieldset>
+              <h3 className="form-title">
+                {isTrial
+                  ? "Request your free trial"
+                  : "Book your product walkthrough"}
+              </h3>
+              <p className="form-description">Fields marked * are required.</p>
+              <div className="form-honeypot" aria-hidden="true">
+                <label htmlFor="website">Leave this field empty</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
               </div>
-
-              {status === "error" && (
-                <p className="sm:col-span-2 text-sm text-red-600">{errorMsg}</p>
-              )}
-
-              <div className="sm:col-span-2">
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="w-full inline-flex items-center justify-center rounded-full bg-accent text-ink px-6 py-3.5 text-[15px] font-semibold hover:-translate-y-0.5 transition-transform disabled:opacity-60 disabled:hover:translate-y-0"
-                >
-                  {status === "loading" ? "Sending..." : text.cta}
-                </button>
+              <div className="form-grid">
+                <Field
+                  name="name"
+                  label="Your name"
+                  autoComplete="name"
+                  required
+                  maxLength={80}
+                />
+                <Field
+                  name="gymName"
+                  label="Gym / studio name"
+                  autoComplete="organization"
+                  required
+                  maxLength={120}
+                />
+                <Field
+                  name="email"
+                  label="Email address"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={254}
+                />
+                <Field
+                  name="phone"
+                  label="Phone with country code"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  maxLength={32}
+                />
+                <Field
+                  name="country"
+                  label="Country"
+                  autoComplete="country-name"
+                  maxLength={80}
+                />
+                <div className="form-field">
+                  <label htmlFor="branches">Number of branches</label>
+                  <select id="branches" name="branches" defaultValue="">
+                    <option value="">Please select</option>
+                    <option value="1">1 location</option>
+                    <option value="2-5">2–5 locations</option>
+                    <option value="6+">6+ locations</option>
+                    <option value="discuss">Let’s discuss</option>
+                  </select>
+                </div>
+                <div className="form-field form-wide">
+                  <label htmlFor="message">
+                    What would you like to explore?
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={3}
+                    maxLength={1500}
+                    placeholder="Your daily workflows, current tools, or questions…"
+                  />
+                </div>
               </div>
+              <label className="form-consent">
+                <input type="checkbox" name="consent" required />
+                <span>
+                  I agree that GymBinary may contact me about this enquiry. Read
+                  the <a href="/website-privacy">website privacy notice</a>. *
+                </span>
+              </label>
+              {status === "error" && (
+                <div
+                  className="form-error"
+                  ref={errorRef}
+                  tabIndex={-1}
+                  role="alert"
+                >
+                  <p>{error}</p>
+                  <a href={`mailto:${site.email}`}>Email {site.email}</a>
+                </div>
+              )}
+              <button
+                type="submit"
+                className="button button-dark"
+                disabled={status === "sending"}
+              >
+                {status === "sending"
+                  ? "Sending your request…"
+                  : isTrial
+                    ? "Request Free Trial"
+                    : "Request a demo"}
+                <Icon name="arrow" size={18} />
+              </button>
+              <p className="form-footnote">
+                {isTrial
+                  ? "Submit a trial request. Our team will confirm the setup, duration and terms with you before your trial begins."
+                  : "This is a walkthrough request. A meeting time will be agreed with you."}
+              </p>
+              <noscript>
+                <p>
+                  Please email <a href={`mailto:${site.email}`}>{site.email}</a>{" "}
+                  to arrange a demo or discuss a free trial.
+                </p>
+              </noscript>
             </form>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
-
 function Field({
-  label,
   name,
+  label,
   type = "text",
+  autoComplete,
   required = false,
+  maxLength,
 }: {
-  label: string;
   name: string;
+  label: string;
   type?: string;
+  autoComplete?: string;
   required?: boolean;
+  maxLength?: number;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-medium mb-1.5" htmlFor={name}>
-        {label} {required && <span className="text-accent-dark">*</span>}
+    <div className="form-field">
+      <label htmlFor={name}>
+        {label}
+        {required && <span> *</span>}
       </label>
       <input
         id={name}
         name={name}
         type={type}
+        autoComplete={autoComplete}
         required={required}
-        className="w-full border border-gray-300 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent-dark"
+        maxLength={maxLength}
       />
     </div>
   );
